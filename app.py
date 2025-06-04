@@ -165,8 +165,7 @@ def get_transcript():
             transcript = YouTubeTranscriptApi.get_transcript(video_id)
             break
         except (TranscriptsDisabled, NoTranscriptFound, VideoUnavailable, VideoUnplayable) as e:
-            clean_error = html.escape(str(e).replace("\n", " ").replace("\r", " "))
-            return redirect(f"/?error=Transcript+not+available:+{clean_error}")
+            return redirect("/?error=Transcript+not+available:+This+video+may+be+private,+restricted,+or+without+captions.")
         except Exception as e:
             if attempt == max_attempts - 1:
                 clean_error = html.escape(str(e).replace("\n", " ").replace("\r", " "))
