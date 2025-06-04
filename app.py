@@ -358,7 +358,8 @@ def download_pdf():
     for line in text.split('\n'):
         pdf.multi_cell(0, 10, line)
     buffer = BytesIO()
-    pdf.output(buffer)
+    pdf_bytes = pdf.output(dest='S').encode('latin1')
+    buffer.write(pdf_bytes)
     buffer.seek(0)
     return send_file(buffer, mimetype='application/pdf', as_attachment=True, download_name=f"{title}.pdf")
 
