@@ -159,10 +159,15 @@ def get_transcript():
     from youtube_transcript_api import YouTubeTranscriptApi, TranscriptsDisabled, NoTranscriptFound, VideoUnavailable, VideoUnplayable
     import time
     import requests
+    import random
     max_attempts = 5
+    session_id = random.randint(10000, 99999)
+    username = f"brd-customer-hl_f717ddf9-zone-residential_proxy1-session-{session_id}"
+    password = "agqa1lrsntnf"
+    proxy_url = f"http://{username}:{password}@brd.superproxy.io:33335"
     proxies = {
-        "http": "http://brd-customer-hl_f717ddf9-zone-residential_proxy1:agqa1lrsntnf@zproxy.lum-superproxy.io:22225",
-        "https": "http://brd-customer-hl_f717ddf9-zone-residential_proxy1:agqa1lrsntnf@zproxy.lum-superproxy.io:22225"
+        "http": proxy_url,
+        "https": proxy_url
     }
     for attempt in range(max_attempts):
         try:
