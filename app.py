@@ -173,7 +173,7 @@ def get_transcript():
                 const response = await fetch("/download-pdf", {{
                     method: "POST",
                     headers: {{ "Content-Type": "application/x-www-form-urlencoded" }},
-                    body: new URLSearchParams({{ content: text, title: title }})
+                    body: new URLSearchParams({{ content: text }})
                 }});
 
                 const blob = await response.blob();
