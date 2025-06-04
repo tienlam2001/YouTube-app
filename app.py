@@ -210,9 +210,13 @@ def download_pdf():
     text = request.form.get('content')
     title = request.form.get('title', 'transcript')
     import re
-    title = re.sub(r'[\\/*?:"<>|\r\n]+', "_", title).strip()
-    title = re.sub(r'\s+', "_", title)  # replace remaining whitespace
-    title = title.encode('ascii', 'ignore').decode()[:100] or "transcript"  # ensure ASCII + trim
+    import unicodedata
+    title = unicodedata.normalize('NFKD', title)
+    title = title.encode('ascii', 'ignore').decode()
+    title = re.sub(r'[\\/*?:"<>|\r\n\t]+', "_", title).strip()
+    title = re.sub(r'\s+', "_", title)
+    if not title:
+        title = "transcript"
     pdf = FPDF()
     pdf.add_page()
     pdf.set_auto_page_break(auto=True, margin=15)
@@ -222,7 +226,7 @@ def download_pdf():
     response = make_response(pdf.output(dest='S').encode('latin1'))
     response.headers['Content-Type'] = 'application/pdf'
     from urllib.parse import quote
-    safe_filename = quote((title + ".pdf").replace("\n", "").replace("\r", "").strip())
+    safe_filename = quote(f"{title}.pdf")
     print(f"Final filename header: {safe_filename}")
     response.headers['Content-Disposition'] = f'attachment; filename="{safe_filename}";'
     return response
