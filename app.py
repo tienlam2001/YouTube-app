@@ -165,10 +165,12 @@ def get_transcript():
             transcript = YouTubeTranscriptApi.get_transcript(video_id)
             break
         except (TranscriptsDisabled, NoTranscriptFound, VideoUnavailable, VideoUnplayable) as e:
-            return redirect(f"/?error=Transcript+not+available:+{html.escape(str(e))}")
+            clean_error = html.escape(str(e).replace("\n", " ").replace("\r", " "))
+            return redirect(f"/?error=Transcript+not+available:+{clean_error}")
         except Exception as e:
             if attempt == max_attempts - 1:
-                return redirect(f"/?error=Failed+to+get+transcript:+{html.escape(str(e))}")
+                clean_error = html.escape(str(e).replace("\n", " ").replace("\r", " "))
+                return redirect(f"/?error=Failed+to+get+transcript:+{clean_error}")
             time.sleep(1)
 
     try:
