@@ -221,7 +221,9 @@ def download_pdf():
         pdf.multi_cell(0, 10, line)
     response = make_response(pdf.output(dest='S').encode('latin1'))
     response.headers['Content-Type'] = 'application/pdf'
-    response.headers['Content-Disposition'] = f'attachment; filename={title}.pdf'
+    from urllib.parse import quote
+    safe_filename = quote(f"{title}.pdf")
+    response.headers['Content-Disposition'] = f'attachment; filename="{safe_filename}"'
     return response
 
 if __name__ == '__main__':
