@@ -225,10 +225,15 @@ def download_pdf():
         pdf.multi_cell(0, 10, line)
     response = make_response(pdf.output(dest='S').encode('latin1'))
     response.headers['Content-Type'] = 'application/pdf'
-    from urllib.parse import quote
-    safe_filename = quote(f"{title}.pdf").replace('\n', '').replace('\r', '')
-    print(f"Final filename header: {safe_filename}")
-    response.headers['Content-Disposition'] = f'attachment; filename="{safe_filename}";'
+    filename = "transcript.pdf"
+    try:
+        from urllib.parse import quote
+        sanitized_title = quote(f"{title}.pdf").replace('\n', '').replace('\r', '')
+        if sanitized_title and "?" not in sanitized_title:
+            filename = sanitized_title
+    except Exception:
+        pass
+    response.headers['Content-Disposition'] = f'attachment; filename="{filename}"'
     return response
 
 if __name__ == '__main__':
