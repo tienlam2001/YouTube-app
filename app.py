@@ -162,7 +162,7 @@ def get_transcript():
     import random
     max_attempts = 5
     session_id = random.randint(10000, 99999)
-    username = f"brd-customer-hl_f717ddf9-zone-residential_proxy1-session-{session_id}"
+    username = f"brd-customer-hl_f717ddf9-zone-residential_proxy1-country-us-session-{session_id}"
     password = "agqa1lrsntnf"
     proxy_url = f"http://{username}:{password}@brd.superproxy.io:33335"
     proxies = {
