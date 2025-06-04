@@ -211,6 +211,8 @@ def download_pdf():
     title = request.form.get('title', 'transcript')
     import re
     title = re.sub(r'[\\/*?:"<>|\r\n]+', "_", title).strip()
+    title = re.sub(r'\s+', "_", title)  # replace remaining whitespace
+    title = title.encode('ascii', 'ignore').decode()[:100] or "transcript"  # ensure ASCII + trim
     pdf = FPDF()
     pdf.add_page()
     pdf.set_auto_page_break(auto=True, margin=15)
@@ -224,7 +226,3 @@ def download_pdf():
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=10000)
-
-
-
-    
