@@ -218,7 +218,10 @@ def download_pdf():
     buffer = BytesIO()
     pdf.output(buffer)
     buffer.seek(0)
-    return send_file(buffer, as_attachment=True, download_name="transcript.pdf", mimetype='application/pdf')
+    response = make_response(buffer.getvalue())
+    response.headers.set('Content-Type', 'application/pdf')
+    response.headers.set('Content-Disposition', 'attachment; filename=transcript.pdf')
+    return response
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=10000)
