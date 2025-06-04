@@ -1,8 +1,9 @@
-from flask import Flask, request, render_template_string, make_response, redirect
+from flask import Flask, request, render_template_string, make_response, redirect, send_file
 from youtube_transcript_api import YouTubeTranscriptApi
 import re
 import html
 from fpdf import FPDF
+from io import BytesIO
 
 app = Flask(__name__)
 
@@ -207,18 +208,17 @@ def get_transcript():
 
 @app.route('/download-pdf', methods=['POST'])
 def download_pdf():
-    text = request.form.get('content')
-    title = "transcript"
+    text = request.form.get('content', '')
     pdf = FPDF()
     pdf.add_page()
     pdf.set_auto_page_break(auto=True, margin=15)
     pdf.set_font("Arial", size=12)
     for line in text.split('\n'):
         pdf.multi_cell(0, 10, line)
-    response = make_response(pdf.output(dest='S').encode('latin1'))
-    response.headers['Content-Type'] = 'application/pdf'
-    response.headers['Content-Disposition'] = 'attachment; filename="transcript.pdf"'
-    return response
+    buffer = BytesIO()
+    pdf.output(buffer)
+    buffer.seek(0)
+    return send_file(buffer, as_attachment=True, download_name="transcript.pdf", mimetype='application/pdf')
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=10000)
