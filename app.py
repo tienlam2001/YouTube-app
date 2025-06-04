@@ -160,9 +160,13 @@ def get_transcript():
     import time
     import requests
     max_attempts = 5
+    proxies = {
+        "http": "http://brd-customer-hl_f717ddf9-zone-residential_proxy1:agqa1lrsntnf@zproxy.lum-superproxy.io:22225",
+        "https": "http://brd-customer-hl_f717ddf9-zone-residential_proxy1:agqa1lrsntnf@zproxy.lum-superproxy.io:22225"
+    }
     for attempt in range(max_attempts):
         try:
-            transcript = YouTubeTranscriptApi.get_transcript(video_id)
+            transcript = YouTubeTranscriptApi.get_transcript(video_id, proxies=proxies)
             break
         except (TranscriptsDisabled, NoTranscriptFound, VideoUnavailable, VideoUnplayable) as e:
             return redirect("/?error=Transcript+not+available:+This+video+may+be+private,+restricted,+or+without+captions.")
