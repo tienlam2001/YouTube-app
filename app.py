@@ -88,8 +88,13 @@ def get_transcript():
     if not video_id:
         return redirect('/?error=Invalid+YouTube+URL')
 
+    from youtube_transcript_api import YouTubeTranscriptApi, TranscriptsDisabled, NoTranscriptFound, VideoUnavailable, VideoUnplayable
     try:
-        transcript = YouTubeTranscriptApi.get_transcript(video_id)
+        try:
+            transcript = YouTubeTranscriptApi.get_transcript(video_id)
+        except (TranscriptsDisabled, NoTranscriptFound, VideoUnavailable, VideoUnplayable) as e:
+            return redirect(f"/?error=Transcript+not+available:+{html.escape(str(e))}")
+
         import requests
         try:
             resp = requests.get(
