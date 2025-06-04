@@ -208,15 +208,7 @@ def get_transcript():
 @app.route('/download-pdf', methods=['POST'])
 def download_pdf():
     text = request.form.get('content')
-    title = request.form.get('title', 'transcript')
-    import re
-    import unicodedata
-    title = unicodedata.normalize('NFKD', title)
-    title = title.encode('ascii', 'ignore').decode()
-    title = re.sub(r'[\\/*?:"<>|\r\n\t]+', "_", title).strip()
-    title = re.sub(r'\s+', "_", title)
-    if not title:
-        title = "transcript"
+    title = "transcript"
     pdf = FPDF()
     pdf.add_page()
     pdf.set_auto_page_break(auto=True, margin=15)
@@ -225,15 +217,7 @@ def download_pdf():
         pdf.multi_cell(0, 10, line)
     response = make_response(pdf.output(dest='S').encode('latin1'))
     response.headers['Content-Type'] = 'application/pdf'
-    filename = "transcript.pdf"
-    try:
-        from urllib.parse import quote
-        sanitized_title = quote(f"{title}.pdf").replace('\n', '').replace('\r', '')
-        if sanitized_title and "?" not in sanitized_title:
-            filename = sanitized_title
-    except Exception:
-        pass
-    response.headers['Content-Disposition'] = f'attachment; filename="{filename}"'
+    response.headers['Content-Disposition'] = 'attachment; filename="transcript.pdf"'
     return response
 
 if __name__ == '__main__':
