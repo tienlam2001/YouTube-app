@@ -168,7 +168,6 @@ def get_transcript():
             <script>
             async function downloadPDF() {{
                 const text = `{escaped_text}`.replace(/&#x27;/g, "'");
-                const title = `{html.escape(video_title)}`;
 
                 const response = await fetch("/download-pdf", {{
                     method: "POST",
@@ -181,7 +180,7 @@ def get_transcript():
                 if (typeof window.showSaveFilePicker === "function") {{
                     // Chrome/Edge with File System Access API
                     const fileHandle = await window.showSaveFilePicker({{
-                        suggestedName: title + ".pdf",
+                        suggestedName: "transcript.pdf",
                         types: [{{ description: "PDF File", accept: {{ "application/pdf": [".pdf"] }} }}]
                     }});
                     const writable = await fileHandle.createWritable();
@@ -192,7 +191,7 @@ def get_transcript():
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement("a");
                     a.href = url;
-                    a.download = title + ".pdf";
+                    a.download = "transcript.pdf";
                     document.body.appendChild(a);
                     a.click();
                     document.body.removeChild(a);
